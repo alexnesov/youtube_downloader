@@ -4,28 +4,27 @@ import customtkinter
 import pytube
 import os
 
+current_dir = os.getcwd()
+
 # YouTube video URL
 
 
-def main_dl():
-    video_url = 'https://www.youtube.com/watch?v=577pltqKwr8&ab_channel=WelcomeJohn'
+def main_dl(link: str):
+    print(f"Downloading: {link}")
+    video_url = link
     # Create a YouTube object
     yt = pytube.YouTube(video_url)
 
     # Get the audio stream with the highest bitrate
     audio_stream = yt.streams.get_audio_only()
 
-    # Specify the download directory
-    download_dir = '/home/nesov/Programmation/youtube_dl/dl_dir'
-
-    # Create the directory if it doesn't exist
-    os.makedirs(download_dir, exist_ok=True)
-
     # Set the output path
-    output_path = os.path.join(download_dir, audio_stream.default_filename)
+    output_path = os.path.join(current_dir, audio_stream.default_filename)
+    print(f"output_path: {output_path}")
 
     # Download the audio file to the specified directory
     audio_stream.download(output_path=output_path)
+    print("Download successful!")
 
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -52,6 +51,8 @@ class App(customtkinter.CTk):
         self.logo_label = customtkinter.CTkLabel(self.sidebar_frame, text="Youtube Music Downloader", font=customtkinter.CTkFont(size=20, weight="bold"))
         self.logo_label.grid(row=0, column=0, padx=20, pady=(20, 20))
         self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event)
+        self.sidebar_button_1.configure(text="Inactive")
+
         self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
         self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w")
         self.appearance_mode_label.grid(row=5, column=0, padx=20, pady=(10, 0))
@@ -68,7 +69,7 @@ class App(customtkinter.CTk):
         self.entry = customtkinter.CTkEntry(self, placeholder_text="Video URL")
         self.entry.grid(row=3, column=1, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nsew")
 
-        self.main_button_1 = customtkinter.CTkButton(master=self, fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"))
+        self.main_button_1 = customtkinter.CTkButton(master=self, fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"), command=self.download_event)
         self.main_button_1.configure(text="Download")
         self.main_button_1.grid(row=3, column=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
             
@@ -97,6 +98,10 @@ class App(customtkinter.CTk):
     def sidebar_button_event(self):
         print("sidebar_button click")
 
+    def download_event(self):
+        print("Download button triggered")
+        video_url = self.entry.get()  # Get the data entered by the user
+        main_dl(video_url)  # Call the main_dl function with the entered URL
 
 if __name__ == "__main__":
     app = App()
