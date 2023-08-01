@@ -54,10 +54,6 @@ def move_file(source_file: str, destination_folder: str) -> None:
     print(f"File {file_name} moved successfully to {destination_path}")
 
 
-
-import os
-from typing import List
-
 def remove_mp4_extension(folder_names: List[str]) -> None:
     """
     Remove the '.mp4' extension from the folder names and rename the folders.
@@ -90,16 +86,19 @@ def remove_mp4_extension(folder_names: List[str]) -> None:
 
 ########################################################################################
 
-# Specify the directory path
-destination_tracks_path = '/home/nesov/Programmation/youtube_dl/Tracks'
 
-# Get the list of folder paths
-folder_paths = get_folder_paths(destination_tracks_path)
-remove_mp4_extension(folder_paths)
-folder_paths = get_folder_paths(destination_tracks_path) # again because no .mp4 anymore
 
-# Print the folder paths
-for path in folder_paths:
-    mp4_files = detect_mp4_files(path)
-    for mp4_path in mp4_files:
-        move_file(mp4_path, destination_tracks_path)
+if __name__ == '__main__':
+    # Specify the directory path
+    destination_tracks_path = '/home/nesov/Programmation/youtube_downloader/Tracks'
+
+    # Get the list of folder paths
+    folder_paths = get_folder_paths(destination_tracks_path)
+    remove_mp4_extension(folder_paths)
+    folder_paths = get_folder_paths(destination_tracks_path) # again because no .mp4 anymore
+
+    # Print the folder paths
+    for path in folder_paths:
+        mp4_files = detect_mp4_files(path)
+        for mp4_path in mp4_files:
+            move_file(mp4_path, destination_tracks_path)
